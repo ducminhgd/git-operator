@@ -1,0 +1,7 @@
+{
+    "python.terminal.activateEnvironment": false,
+    "python.pythonPath": "/home/minhgdd/.local/share/virtualenvs/git-operator-JZlaY86Y/bin/python",
+    "python.formatting.autopep8Args": [
+        "--max-line-length=120"
+    ]
+}

@@ -1,0 +1,14 @@
+__pycache__
+git_operator/__pycache__
+.direnv
+.env
+.envrc
+.envrc.sample
+.git
+.idea
+.pylintrc
+.vscode
+*.pyc
+docker-compose.yaml
+docs
+README.md

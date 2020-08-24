@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Main",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/git_operator/main.py",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "Python: Release",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/git_operator/main.py",
+            "envFile": "${workspaceFolder}/.env",
+            "args": [
+                "gitlab",
+                "release",
+                "2",
+                "--ref=master"
+            ],
+            "console": "internalConsole"
+        }
+    ]
+}
