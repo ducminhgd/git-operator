@@ -28,6 +28,6 @@ optional arguments:
 
 1. A commit message SHOULD contain a tag:
   - Majour tags are `#removed`, `#reverted`, `#upgrade`, which changes make current application make it not compatible
-  - Minor tags are: `#changed`,  `#added`, `updated`
+  - Minor tags are: `#changed`,  `#added`, `#updated`
   - Patch tags are: `#patched`, `#fixed`, `#hotfixed`, `#bugfixed`
 2. If commit message DOES NOT contain a tag, then consider as `#patched`
