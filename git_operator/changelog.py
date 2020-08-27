@@ -36,12 +36,11 @@ def collect_changelog(diff: Dict) -> Dict:
     }
     for commit in diff['commits']:
         for tag, typ in TAG_TYPE.items():
-            if tag in commit['title']:
+            if tag in commit['title'].lower():
                 result[typ].insert(0, commit)
                 break
         else:
             result['Missing'].insert(0, commit)
-            break
     return result
 
 
