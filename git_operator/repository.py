@@ -118,13 +118,4 @@ class GitLabRepo:
             print(f'{str(ex)}: v{new_version}')
             return False
         
-        try:
-            project.releases.create({
-                'name': f'Release {new_version}',
-                'tag_name': f'v{new_version}',
-                'description': release_description,
-            })
-        except Exception as ex:
-            print(f'{str(ex)}: {new_version}')
-            return False
         return True
