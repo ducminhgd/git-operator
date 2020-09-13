@@ -2,15 +2,28 @@ import semver
 from typing import Dict
 
 TAG_TYPE = {
+    '#breaking': 'Major',
+    '#major': 'Major',
+    '#remove': 'Major',
     '#removed': 'Major',
+    '#revert': 'Major',
     '#reverted': 'Major',
+    '#upgrad': 'Major',
     '#upgraded': 'Major',
+    '#minor': 'Minor',
+    '#change': 'Minor',
     '#changed': 'Minor',
+    '#add': 'Minor',
     '#added': 'Minor',
+    '#update': 'Minor',
     '#updated': 'Minor',
+    '#patch': 'Patch',
     '#patched': 'Patch',
+    '#fix': 'Patch',
     '#fixed': 'Patch',
+    '#hotfix': 'Patch',
     '#hotfixed': 'Patch',
+    '#bugfix': 'Patch',
     '#bugfixed': 'Patch',
 }
 
