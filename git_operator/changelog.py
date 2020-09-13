@@ -8,7 +8,7 @@ TAG_TYPE = {
     '#removed': 'Major',
     '#revert': 'Major',
     '#reverted': 'Major',
-    '#upgrad': 'Major',
+    '#upgrade': 'Major',
     '#upgraded': 'Major',
     '#minor': 'Minor',
     '#change': 'Minor',

@@ -27,7 +27,7 @@ optional arguments:
 ## Commit message convention
 
 1. A commit message SHOULD contain a tag:
-  - Majour tags are `#removed`, `#reverted`, `#upgrade`, which changes make current application make it not compatible
-  - Minor tags are: `#changed`,  `#added`, `#updated`
-  - Patch tags are: `#patched`, `#fixed`, `#hotfixed`, `#bugfixed`
+  - Major tags are `#breaking`, `#major`, `#remove`/`#removed`, `#revert`/`#reverted`, `#upgrade`/`#upgrade`, which changes make current application make it not compatible
+  - Minor tags are: `#minor`, `#change`/`#changed`,  `#add`/`#added`, `#update`/`#updated`
+  - Patch tags are: `#patch`/`#patched`, `#fix`/`#fixed`, `#hotfix`/`#hotfixed`, `#bugfix`/`#bugfixed`
 2. If commit message DOES NOT contain a tag, then consider as `#patched`
