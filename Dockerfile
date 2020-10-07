@@ -11,12 +11,12 @@ RUN apt-get update && apt-get install -y pipenv  \
     && pip install --prefix=/install --ignore-installed -r requirements.txt \
     && apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-FROM python:3.8-slim
+FROM python:3.8-alpine3.12
 
 LABEL maintainer="giaduongducminh@gmail.com"
 LABEL service_name="git-operator"
 
-RUN useradd -u 1000 git-ops
+RUN adduser --disabled-password -u 1000 git-ops
 USER git-ops
 
 WORKDIR /app
