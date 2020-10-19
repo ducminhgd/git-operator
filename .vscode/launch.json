@@ -4,12 +4,16 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "Python: Main",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/git_operator/main.py",
             "console": "internalConsole",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/git_operator"
+            },
             "envFile": "${workspaceFolder}/.env"
         },
         {
@@ -17,12 +21,32 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/git_operator/main.py",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/git_operator"
+            },
             "envFile": "${workspaceFolder}/.env",
             "args": [
                 "gitlab",
-                "release",
                 "2",
+                "release",
                 "--ref=master"
+            ],
+            "console": "internalConsole"
+        },
+        {
+            "name": "Python: Hotfix",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/git_operator/main.py",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/git_operator"
+            },
+            "envFile": "${workspaceFolder}/.env",
+            "args": [
+                "gitlab",
+                "2",
+                "hotfix",
+                "--version=1.7.0"
             ],
             "console": "internalConsole"
         }
