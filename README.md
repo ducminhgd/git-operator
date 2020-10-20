@@ -8,20 +8,21 @@ Using for manage projects on Git repositories
 ## Usage
 
 ```bash
-usage: main.py [-h] [--host HOST] [--token TOKEN] [--ref REF] {gitlab,github} {release} project_id
+usage: main.py [-h] [--host HOST] [--token TOKEN] [--ref REF] [--version VERSION] {gitlab,github} project_id {release,hotfix}
 
 Git operator service
 
 positional arguments:
-  {gitlab,github}  Service name
-  {release}        Command
-  project_id       ID of Project
+  {gitlab,github}    Service name
+  project_id         ID of Project
+  {release,hotfix}   Command
 
 optional arguments:
-  -h, --help       show this help message and exit
-  --host HOST      Git host
-  --token TOKEN    Token for authentication
-  --ref REF        Ref name or commit hash
+  -h, --help         show this help message and exit
+  --host HOST        Git host
+  --token TOKEN      Token for authentication
+  --ref REF          Ref name or commit hash
+  --version VERSION  Version needs hotfixing
 ```
 
 ## Commit message convention
