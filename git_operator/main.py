@@ -32,18 +32,7 @@ def release(service: GitLabRepo, args_ref: str = None):
 
 
 def hotfix(service: GitLabRepo, version: str):
-    tags = service.get_tags_as_string()
-    if version not in tags:
-        print('Cannot find ref')
-        exit(0)
-    tag = tags[version]
-    tag_commit = service.get_commit(tag.target)
-
-    branch_name = f'release/{version}'
-    latest_commit = service.get_commit(branch_name)
-
-    diff = service.get_diff(to_ref=latest_commit.id, from_ref=tag_commit.id)
-    print(0)
+    return service.create_hotfix(version)
 
 
 if __name__ == "__main__":
@@ -70,6 +59,6 @@ if __name__ == "__main__":
     if args.command == 'hotfix':
         if not bool(args.version):
             parser.error('version is required if command=hotfix')
-        hotfix(service, args.version)
+        success = hotfix(service, args.version)
 
     exit(1 - int(success))
