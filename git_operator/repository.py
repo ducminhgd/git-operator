@@ -1,7 +1,7 @@
 from typing import Dict, Optional
 from gitlab import Gitlab, GitlabGetError
 from gitlab.v4.objects import Project, ProjectTag, ProjectCommit
-from changelog import collect_changelog, bump_version, get_changelog_markdown
+from changelog import collect_changelog, bump_version, get_changelog_markdown, get_hotfix_changelog_markdown
 
 
 class GitLabRepo:
@@ -67,7 +67,7 @@ class GitLabRepo:
         except Exception as ex:
             print(f'{str(ex)}: release/{version}')
             return False
-        
+
         try:
             project.tags.create({
                 'tag_name': f'v{version}',
@@ -76,7 +76,7 @@ class GitLabRepo:
         except Exception as ex:
             print(f'{str(ex)}: v{version}')
             return False
-        
+
         try:
             project.releases.create({
                 'name': f'Release {version}',
@@ -107,7 +107,7 @@ class GitLabRepo:
         except Exception as ex:
             print(f'{str(ex)}: release/{new_version}')
             return False
-        
+
         try:
             project.tags.create({
                 'tag_name': f'v{new_version}',
@@ -117,5 +117,56 @@ class GitLabRepo:
         except Exception as ex:
             print(f'{str(ex)}: v{new_version}')
             return False
-        
+
+        return True
+
+    def create_hotfix(self, version: str, project_id: Optional[int] = None) -> bool:
+        if bool(project_id):
+            project = self.__connector.projects.get(project_id)
+        else:
+            project = self.__project
+
+        tags = self.get_tags_as_string()
+        if version not in tags:
+            print('Cannot find ref')
+            return False
+
+        # Collecting information
+        tag = tags[version]
+        tag_commit = self.get_commit(tag.target)
+        release_description = tag.release['description']
+
+        branch_name = f'release/{version}'
+        latest_commit = self.get_commit(branch_name)
+        diff = self.get_diff(to_ref=latest_commit.id, from_ref=tag_commit.id)
+        if not bool(diff):
+            print('There is not diffs')
+            return False
+
+        # Append new change log
+        release_description = get_hotfix_changelog_markdown(release_description, diff)
+
+        # Delete tag & release
+        try:
+            project.releases.delete({
+                'tag_name': f'v{version}',
+            })
+
+            project.tags.delete({
+                'tag_name': f'v{version}',
+            })
+        except Exception as ex:
+            print(f'{str(ex)}: v{version}')
+
+        # Create new tag
+        try:
+            project.tags.create({
+                'tag_name': f'v{version}',
+                'ref': latest_commit.id,
+                'release_description': release_description
+            })
+        except Exception as ex:
+            print(f'{str(ex)}: v{version}')
+            return False
+
         return True
