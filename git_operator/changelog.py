@@ -94,9 +94,12 @@ def get_changelog_markdown(ver: str, changelog: Dict) -> str:
 
 def get_hotfix_changelog_markdown(current_changelog: str, changelog: Dict) -> str:
     if bool(changelog):
-        hotfix_description = f'## Hotfix ({datetime.now().isoformat()})\n'
+        hotfix_commits = []
         for commit in changelog.get('commits') or []:
-            hotfix_description += f'\n- {commit["short_id"]} {commit["message"]}'
+            hotfix_commits.append(f'- {commit["short_id"]} {commit["message"]}')
+
+        hotfix_description = '\n'.join(hotfix_commits)
+        hotfix_description = (f'## Hotfix ({datetime.now().isoformat()})\n' + hotfix_description)
 
         current_changelog = '\n\n'.join([current_changelog, hotfix_description])
     return current_changelog

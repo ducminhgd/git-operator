@@ -151,7 +151,7 @@ class GitLabRepo:
         else:
             latest_commit = self.get_commit(ref)
         diff = self.get_diff(to_ref=latest_commit.id, from_ref=tagging_commit.id)
-        if not bool(diff):
+        if not bool(diff['commits']):
             print('There is not diffs')
             return False
 
