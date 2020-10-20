@@ -1,5 +1,6 @@
 from typing import Dict, Optional
 from gitlab import Gitlab, GitlabGetError
+from gitlab.exceptions import GitlabCreateError
 from gitlab.v4.objects import Project, ProjectTag, ProjectCommit
 from changelog import collect_changelog, bump_version, get_changelog_markdown, get_hotfix_changelog_markdown
 
@@ -104,6 +105,10 @@ class GitLabRepo:
                 'branch': f'release/{new_version}',
                 'ref': from_ref.id,
             })
+        except GitlabCreateError as ex:
+            print(f'{str(ex)}: release/{new_version}')
+            if ex.error_message != 'Branch already exists':
+                return False
         except Exception as ex:
             print(f'{str(ex)}: release/{new_version}')
             return False
@@ -114,13 +119,17 @@ class GitLabRepo:
                 'ref': from_ref.id,
                 'release_description': release_description
             })
+        except GitlabCreateError as ex:
+            print(f'{str(ex)}: v{new_version}')
+            if ex.error_message != 'Tag already exists':
+                return False
         except Exception as ex:
             print(f'{str(ex)}: v{new_version}')
             return False
 
         return True
 
-    def create_hotfix(self, version: str, project_id: Optional[int] = None) -> bool:
+    def create_hotfix(self, version: str, ref: Optional[str] = None, project_id: Optional[int] = None) -> bool:
         if bool(project_id):
             project = self.__connector.projects.get(project_id)
         else:
@@ -133,12 +142,15 @@ class GitLabRepo:
 
         # Collecting information
         tag = tags[version]
-        tag_commit = self.get_commit(tag.target)
+        tagging_commit = self.get_commit(tag.target)
         release_description = tag.release['description']
 
-        branch_name = f'release/{version}'
-        latest_commit = self.get_commit(branch_name)
-        diff = self.get_diff(to_ref=latest_commit.id, from_ref=tag_commit.id)
+        if not bool(ref):
+            branch_name = f'release/{version}'
+            latest_commit = self.get_commit(branch_name)
+        else:
+            latest_commit = self.get_commit(ref)
+        diff = self.get_diff(to_ref=latest_commit.id, from_ref=tagging_commit.id)
         if not bool(diff):
             print('There is not diffs')
             return False
@@ -148,13 +160,8 @@ class GitLabRepo:
 
         # Delete tag & release
         try:
-            project.releases.delete({
-                'tag_name': f'v{version}',
-            })
-
-            project.tags.delete({
-                'tag_name': f'v{version}',
-            })
+            project.releases.delete(id=f'v{version}')
+            project.tags.delete(id=f'v{version}')
         except Exception as ex:
             print(f'{str(ex)}: v{version}')
 

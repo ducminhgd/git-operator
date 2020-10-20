@@ -13,10 +13,9 @@ def release(service: GitLabRepo, args_ref: str = None):
     latest_v = tags[latest_vname]
 
     latest_commit = service.get_commit(latest_v.target)
-    if bool(args_ref):
-        ref = service.get_commit(args_ref)
-    else:
-        ref = service.get_latest_commit()
+    if not bool(args_ref):
+        args_ref = 'master'    
+    ref = service.get_commit(args_ref)
 
     if ref is None:
         print('Cannot find ref')
@@ -31,8 +30,8 @@ def release(service: GitLabRepo, args_ref: str = None):
     exit(1 - int(success))
 
 
-def hotfix(service: GitLabRepo, version: str):
-    return service.create_hotfix(version)
+def hotfix(service: GitLabRepo, version: str, ref: str = None):
+    return service.create_hotfix(version, ref)
 
 
 if __name__ == "__main__":
@@ -44,7 +43,7 @@ if __name__ == "__main__":
     parser.add_argument('--host', help='Git host', required=False, dest='host', default=os.getenv('GIT_HOST', ''))
     parser.add_argument('--token', help='Token for authentication', required=False,
                         dest='token', default=os.getenv('GIT_PRIVATE_TOKEN', ''))
-    parser.add_argument('--ref', help='Ref name or commit hash', required=False, dest='ref', default='master')
+    parser.add_argument('--ref', help='Ref name or commit hash', required=False, dest='ref')
     parser.add_argument('--version', help='Version needs hotfixing', required=False, dest='version')
 
     args = parser.parse_args()
@@ -59,6 +58,6 @@ if __name__ == "__main__":
     if args.command == 'hotfix':
         if not bool(args.version):
             parser.error('version is required if command=hotfix')
-        success = hotfix(service, args.version)
+        success = hotfix(service, args.version, args.ref)
 
     exit(1 - int(success))
