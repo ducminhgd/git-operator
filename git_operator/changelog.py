@@ -71,19 +71,19 @@ def bump_version(current: str, major: bool = False, minor: bool = False, patch: 
 def get_changelog_markdown(ver: str, changelog: Dict) -> str:
     changelog_lines = [f'# Release version {ver}', ]
 
-    if bool(changelog['Major']):
+    if bool(changelog.get('Major', [])):
         changelog_lines.append('## Major changes')
         for line in changelog['Major']:
             changelog_lines.append(f'- {line["short_id"]} {line["title"]}')
-    if bool(changelog['Minor']):
+    if bool(changelog.get('Minor', [])):
         changelog_lines.append('## Minor changes')
         for line in changelog['Minor']:
             changelog_lines.append(f'- {line["short_id"]} {line["title"]}')
-    if bool(changelog['Patch']):
+    if bool(changelog.get('Patch', [])):
         changelog_lines.append('## Patches')
         for line in changelog['Patch']:
             changelog_lines.append(f'- {line["short_id"]} {line["title"]}')
-    if bool(changelog['Missing']):
+    if bool(changelog.get('Missing', [])):
         changelog_lines.append('## Missing definition')
         for line in changelog['Missing']:
             changelog_lines.append(f'- {line["short_id"]} {line["title"]}')
