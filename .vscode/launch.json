@@ -29,7 +29,7 @@
                 "gitlab",
                 "2",
                 "release",
-                "--ref=a1c484b7f15bee3b5cfd19692933762e5646ad62"
+                "--ref=16ebade70df54901968eab6efa7875dce119a576"
             ],
             "console": "internalConsole"
         },

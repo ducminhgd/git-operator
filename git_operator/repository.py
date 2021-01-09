@@ -139,7 +139,9 @@ class GitLabRepo:
         return True
 
     def create_tag(self, ref_name: str, desired_version: Optional[str] = None, project_id: Optional[int] = None) -> bool:
-        """Create tag from a ref with or without desired version
+        """Create tag from a ref with or without desired version, read more:
+        - https://docs.gitlab.com/ee/api/releases/
+        - https://docs.gitlab.com/ee/api/tags.html
 
         :param ref_name: Name of ref to create tag from
         :type ref_name: str

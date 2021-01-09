@@ -1,7 +1,4 @@
-certifi==2020.6.20
-chardet==3.0.4
-idna==2.10
-python-gitlab==2.4.0
-requests==2.24.0
-semver==2.10.2
+python-gitlab~=2.4
+requests~=2.24
+semver~=2.10
 urllib3==1.25.10
