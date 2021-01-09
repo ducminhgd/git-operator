@@ -149,34 +149,17 @@ class GitLabRepo:
         :type desired_version: Optional[str], optional
         :param project_id: ID of project. If None then get from object, defaults to None
         :type project_id: Optional[int], optional
-        :return: [description]
         :rtype: bool
         """
+        version, changes_log = self.get_next_version(ref_name, desired_version)
+        if not bool(changes_log):
+            print('No changed')
+            return False
+
         if bool(project_id):
             project = self.__connector.projects.get(project_id)
         else:
             project = self.__project
-
-        tags = self.get_tags_as_string()
-
-        # If exist then update tag, else create new tag
-        if desired_version in tags:
-            version = desired_version
-            latest_commit = self.get_commit(f'release/{version}')
-            diff = self.get_diff(to_ref=latest_commit.id, from_ref=tags[version].target)
-            if not bool(diff['commits']):
-                print('There is no differences')
-                return False
-            release_description = tags[version].release['description']
-            changes_log = get_hotfix_changelog_markdown(release_description, diff)
-            # Delete tag & release
-            try:
-                project.releases.delete(id=f'v{version}')
-                project.tags.delete(id=f'v{version}')
-            except Exception as ex:
-                print(f'{str(ex)}: v{version}')
-        else:
-            version, changes_log = self.get_next_version(ref_name, desired_version)
 
         try:
             project.tags.create({
@@ -190,21 +173,23 @@ class GitLabRepo:
         print(f'Create version {version}')
         return True
 
-    def get_next_version(self, ref_name: str = 'master', desired_version: Optional[str] = None):
+    def get_next_version(self, ref_name: str = 'master', from_version: Optional[str] = None):
         """Get next version if capable
 
         :param ref_name: ref name or ref hash to create next version, defaults to 'master'
         :type ref_name: str, optional
-        :param desired_version: desired version to check if it is existed or not, defaults to None
-        :type desired_version: Optional[str], optional
+        :param from_version: from version it bumps, default is None
+        :type from_version: Optional[str], optional
         :return: next version, change log
         :rtype: Tuple(str, str)
         """
         tags = self.get_tags_as_string()
-        latest_vname = get_latest_version(list(tags.keys()))
+
+        if bool(from_version):
+            latest_vname = from_version
+        else:
+            latest_vname = get_latest_version(list(tags.keys()))
         if not bool(tags):
-            if bool(desired_version):
-                latest_vname = desired_version
             return latest_vname, get_changelog_markdown(latest_vname, {})
         ref = self.get_commit(ref_name)
         if ref is None:
@@ -212,10 +197,8 @@ class GitLabRepo:
         latest_tag = self.get_commit(tags[latest_vname].target)
         diff = self.get_diff(from_ref=latest_tag.id, to_ref=ref.id)
         if not bool(diff['commits']):
-            return None, ''
+            return latest_vname, ''
         changelog = collect_changelog(diff)
-        if bool(desired_version):
-            return desired_version, get_changelog_markdown(desired_version, changelog)
         new_version = bump_version(
             latest_vname, bool(changelog['Major']),
             bool(changelog['Minor']) or bool(changelog['Missing']),

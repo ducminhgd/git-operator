@@ -1,5 +1,8 @@
 {
     "python.terminal.activateEnvironment": false,
+    "python.analysis.extraPaths": [
+        "git_operator"
+    ],
     "python.formatting.autopep8Args": [
         "--max-line-length=120"
     ]

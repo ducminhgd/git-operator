@@ -10,7 +10,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/git_operator/main.py",
-            "console": "internalConsole",
+            "console": "integratedTerminal",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/git_operator"
             },
@@ -27,14 +27,14 @@
             "envFile": "${workspaceFolder}/.env",
             "args": [
                 "gitlab",
-                "2",
+                "191",
                 "release",
-                "--ref=16ebade70df54901968eab6efa7875dce119a576"
+                "--ref=7808fa30beb2eab222eca2c240bf8602ef2058e7"
             ],
-            "console": "internalConsole"
+            "console": "integratedTerminal"
         },
         {
-            "name": "Python: Hotfix",
+            "name": "Python: create-branch",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/git_operator/main.py",
@@ -44,11 +44,30 @@
             "envFile": "${workspaceFolder}/.env",
             "args": [
                 "gitlab",
-                "2",
-                "hotfix",
-                "--version=1.8.0"
+                "191",
+                "create-branch",
+                "--version=1.2.2",
+                "--ref=7808fa30beb2eab222eca2c240bf8602ef2058e7"
             ],
-            "console": "internalConsole"
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: tag",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/git_operator/main.py",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/git_operator"
+            },
+            "envFile": "${workspaceFolder}/.env",
+            "args": [
+                "gitlab",
+                "191",
+                "tag",
+                "--version=1.2.2",
+                "--ref=978a133356246f00c5099f1a4d907074565410ce"
+            ],
+            "console": "integratedTerminal"
         }
     ]
 }
