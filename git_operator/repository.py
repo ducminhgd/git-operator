@@ -2,7 +2,6 @@
 """
 from typing import Dict, Optional
 from gitlab import Gitlab, GitlabGetError
-from gitlab.exceptions import GitlabCreateError
 from gitlab.v4.objects import Project, ProjectTag, ProjectCommit
 from changelog import collect_changelog, bump_version, get_changelog_markdown, get_hotfix_changelog_markdown, get_latest_version
 
@@ -23,15 +22,28 @@ class GitLabRepo:
         """
         self.__connector = Gitlab(host, private_token=token)
 
-    def set_project(self, project_id: int) -> Project:
+    def set_project(self, project_id: int):
         """Set project as current project
 
         :param project_id: ID of project on Gitlab
         :type project_id: int
-        :return: current project after set
-        :rtype: Project
         """
         self.__project = self.__connector.projects.get(project_id)
+
+    def get_project(self, project_id: Optional[int]) -> Project:
+        """Gets project
+
+        Args:
+            project_id (Optional[int]): ID of project to get, if None then get current project
+
+        Returns:
+            Project: desired project
+        """
+        if bool(project_id):
+            project = self.__connector.projects.get(project_id)
+        else:
+            project = self.__project
+        return project
 
     def get_tags_as_string(self, project_id: Optional[int] = None) -> Dict[str, ProjectTag]:
         """Get list tags as strings
@@ -222,3 +234,14 @@ class GitLabRepo:
             bool(changelog['Patch'])
         )
         return new_version, get_changelog_markdown(new_version, changelog)
+
+    def get_tag(self, tag_name: str, project_id: Optional[int] = None) -> Optional[ProjectTag]:
+        if bool(project_id):
+            project = self.__connector.projects.get(project_id)
+        else:
+            project = self.__project
+
+        try:
+            return project.tags.get(id=tag_name)
+        except GitlabGetError:
+            return None
