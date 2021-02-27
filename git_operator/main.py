@@ -2,6 +2,7 @@ import os
 import argparse
 from repository import GitLabRepo
 from email_helper import send_email
+import markdown
 
 ENV = os.getenv('ENV', 'Production')
 
@@ -51,9 +52,10 @@ if __name__ == "__main__":
         if not tag or not project:
             print('Project or Tag does not exit')
             exit(1)
-        subject = f'[{ENV}][{project.path_with_namespace}] Release version {tag.name} ({tag.target})'
+        subject = f'[{ENV}][{project.path_with_namespace}] Release version {tag.name} ({tag.target[:8]})'
         body = tag.release.get('description', f'Commit hash: {tag.target}')
-        sent_email = send_email(args.send_to, subject, body, args.send_cc, args.send_bcc)
+        body = markdown.markdown(body)
+        sent_email = send_email(args.send_to, subject, body, cc=args.send_cc, bcc=args.send_bcc, mimetype='html')
         if not sent_email:
             print('Send email failed')
             exit(1)
